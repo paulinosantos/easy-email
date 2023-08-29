@@ -1,8 +1,8 @@
-import { BlockManager,IPage, BasicType, IBlockData } from 'easy-email-core';
+import { BlockManager, IPage, BasicType, IBlockData } from 'easy-email-core';
 import { identity, isString, pickBy } from 'lodash';
 import { parseXMLtoBlock } from './parseXMLtoBlock';
 
-export function MjmlToJson(data: MjmlBlockItem | string): IPage {
+export function MjmlToJson(data: MjmlBlockItem | string, applyDefaultAttributes: boolean): IPage {
   if (isString(data)) return parseXMLtoBlock(data);
 
   const transform = (item: IChildrenItem): IBlockData => {
@@ -129,7 +129,7 @@ export function MjmlToJson(data: MjmlBlockItem | string): IPage {
           payload.children = item.children.map(transform);
         }
 
-        const blockData = block.create(payload);
+        const blockData = applyDefaultAttributes ? block.create(payload) : payload;
 
         // format padding
         formatPadding(blockData.attributes, 'padding');
